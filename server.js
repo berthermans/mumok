@@ -1,47 +1,35 @@
 const express = require('express');
-const WebSocket = require('ws');
-const path = require('path');
 const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
 const PORT = process.env.PORT || 3000;
-
-
 let playerList = [];
 
 app.use(express.static('public'));
 
-app.listen(PORT, () => {
-	console.log(`Server started on port: ${PORT}`);
+io.on('connection', (socket) => 	{
+
+  console.log('a user connected');
+  broadcastPlayerList();
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+
+  socket.on('signup', (data) => {
+  	
+  	playerList.push(data);
+
+  	broadcastPlayerList();
+  });
 });
 
-const wsServer = new WebSocket.Server({ port: 3001 });
-
-wsServer.on('connection', (ws) => {
-  console.log('Client connected');
-
-	ws.on('message', (data) => {
-		
-		data = JSON.parse(data);
-
-		events[data.type](data.message);
-	});
-
-});
-
-const events = {
-	newUser: (userName) => {
-		console.log(`Player ${userName} joined`);
-
-		playerList.push(userName);
-	}
+let broadcastPlayerList = () => {
+	console.log('sending player list');
+	io.emit('playerList', playerList);
 }
 
-
-wsServer.on('close', () => {
-	console.log('Client disconnected');
+http.listen(PORT, () => {
+	console.log(`listening on *:${PORT}`);
 });
-
-setInterval(() => {
-  wsServer.clients.forEach((client) => {
-    client.send(JSON.stringify(playerList));
-  });
-}, 50);

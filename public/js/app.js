@@ -1,17 +1,20 @@
-var ws = new WebSocket('ws://mumok.herokuapp.com:3001');
+var socket = io();
 
-var playerList = document.getElementById('playerList');
-var playerName = document.getElementById('playerName');
-var playerNameSubmit = document.getElementById('playerNameSubmit');
+var $playerList = $('#playerList');
+var $playerNameInput = $('#playerNameInput');
+var $playerNameSubmit = $('#playerNameSubmit');
 
-playerNameSubmit.onclick = function(){
-	ws.send(JSON.stringify({
-		type: 'newUser',
-		message: playerName.value
-	}));
-}
+$playerNameSubmit.on('click', function(){
 
+	var data = {
+		name: $playerNameInput.val()
+	}
 
-ws.onmessage = function (event) {
-  playerList.innerHTML = JSON.parse(event.data).join('<br/>');
-};
+	socket.emit('signup', data);
+});
+
+socket.on('playerList', function(data){
+  $playerList.html(data.map(function(player, index){
+  	return player.name
+  }).join('<br/>'));
+});
