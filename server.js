@@ -10,11 +10,25 @@ app.use(express.static('public'));
 
 io.on('connection', (socket) => 	{
 
+
+	let currentPlayer = {
+		name: 'unknown'
+	};
+
   console.log('a user connected');
-  broadcastPlayerList();
+  
+  // broadcastPlayerList();
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
+
+    socket.emit('pingBack');
+  });
+
+
+  socket.on('position', (data) => {
+
+  	console.log('update position', data);
   });
 
   socket.on('signup', (data) => {
