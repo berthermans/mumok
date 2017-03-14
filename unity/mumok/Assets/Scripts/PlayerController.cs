@@ -19,8 +19,18 @@ public class PlayerController : MonoBehaviour {
         currentPosition     = oldPosition;
         oldRotation         = transform.rotation;
         currentRotation     = oldRotation;
+
+        StartCoroutine(ConnectToServer());
     }
-	
+
+    IEnumerator ConnectToServer()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        string positionData = JsonUtility.ToJson(new PositionJSON(transform.position));
+        socket.Emit("avatarInit", new JSONObject(positionData));
+    }
+
 	// Update is called once per frame
 	void Update () {
         if (!isLocalPlayer)
@@ -40,18 +50,11 @@ public class PlayerController : MonoBehaviour {
         if(currentPosition != oldPosition)
         {
 
-
             string positionData = JsonUtility.ToJson(new PositionJSON(transform.position));
-
             socket.Emit("position", new JSONObject(positionData));
             oldPosition = currentPosition;
         }
-
-        if(currentRotation != oldRotation)
-        {
-            //TODO: networking
-            oldRotation = currentRotation;
-        }
+        
 	}
 
     public class PositionJSON
@@ -60,7 +63,7 @@ public class PlayerController : MonoBehaviour {
 
         public PositionJSON(Vector3 _position)
         {
-            position = new float[] { _position.x, _position.y, _position.z };
+            position = new float[] { _position.x, _position.z };
         }
     }
 }

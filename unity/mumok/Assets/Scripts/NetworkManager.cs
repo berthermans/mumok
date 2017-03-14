@@ -1,37 +1,37 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 using SocketIO;
 
 public class NetworkManager : MonoBehaviour {
 
     public static NetworkManager instance;
-    public Canvas canvas;
     public SocketIOComponent socket;
     public GameObject player;
 
 	// Use this for initialization
 	void Start () {
-        ConnectToServer();
 
+        Debug.Log("ConnectToServer");
+        socket.Emit("unityConnect");
     }
+    
 
     #region Commands
 
-    IEnumerator ConnectToServer()
+    public void CommandMove(Vector3 vec3)
     {
-        yield return new WaitForSeconds(0.5f);
+        string positionData = JsonUtility.ToJson(new PositionJSON(vec3));
 
-        socket.Emit("unityConnect");
-
-        //yield return new WaitForSeconds(1);
-
-        
+        socket.Emit("position", new JSONObject(positionData));
     }
 
     #endregion
 
     #region Listening
+
+
 
     #endregion
 

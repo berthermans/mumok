@@ -1,0 +1,22 @@
+#pieces {
+	width: 500px;
+	height: 500px;
+	border: solid 1px #000;
+	position: relative;
+}
+
+.piece {
+	width: 10px;
+	height: 10px;
+	background: #f00;
+	border-radius: 50%;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-top: -5px;
+	margin-left: -5px;
+}
+
+.art {
+	background: #0f0;
+}
