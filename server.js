@@ -4,7 +4,12 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 const PORT = process.env.PORT || 3000;
+
 let playerList = {};
+let avatarData = {
+	name: 'avatar'
+};
+let artData = {};
 
 app.use(express.static('public'));
 
@@ -15,20 +20,36 @@ io.on('connection', (socket) => {
 	var clientID = socket.client.id;
 
   broadcastPlayerList();
-
+  broadcastAvatar();
+  broadcastArt();
 
   socket.on('avatarInit', (positionData) => {
   	console.log('avatar connected!');
   	console.log(positionData);
 
-  	broadcastCoordinates('avatar', positionData);
+  	avatarData.coordinates = positionData;
+
+  	broadcastAvatar();
   });
 
   socket.on('artInit', (positionData) => {
   	console.log('art piece connected!');
   	console.log(positionData);
 
-  	broadcastCoordinates('art', positionData);
+  	var name = 'art' + Math.random() * 100;
+
+  	artData[name] = {
+  		name: name,
+  		coordinates: positionData
+  	}
+
+  	broadcastArt();
+  });
+
+  socket.on('move', (direction) => {
+  	
+  	console.log(direction);
+  	io.emit('avatarMove', {direction: direction});
   });
 
   socket.on('disconnect', () => {
@@ -44,7 +65,10 @@ io.on('connection', (socket) => {
 
 
   socket.on('position', (positionData) => {
-  	console.log(positionData);
+  	// console.log(positionData);
+  	// 
+  	avatarData.coordinates = positionData;
+  	broadcastAvatar();
   });
 
   socket.on('signup', (signupData) => {
@@ -55,12 +79,14 @@ io.on('connection', (socket) => {
   });
 });
 
-let broadcastCoordinates = (name, coordinatesData) => {
-	console.log('Sending coordinates of pieces');
-	io.emit('coordinates', {
-		name: name,
-		coordinates: coordinatesData
-	});
+let broadcastAvatar = () => {
+	console.log('Sending coordinates of avatar');
+	io.emit('avatar', avatarData);
+}
+
+let broadcastArt = () => {
+	console.log('Sending coordinates of art');
+	io.emit('art', artData);
 }
 
 let broadcastPlayerList = () => {

@@ -1,8 +1,30 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	overflow: hidden;
+	width: 100vw;
+	/*height: 100vh;*/
+	margin: 0;
+	padding: 0;
+	background: #036;
+}
+
 #pieces {
-	width: 500px;
-	height: 500px;
-	border: solid 1px #000;
-	position: relative;
+	width: 300px;
+	height: 300px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -150px;
+	margin-top: -150px;
+	background: white;
+	border-radius: 15px;
+}
+
+.hidden {
+	display: none;
 }
 
 .piece {
@@ -19,4 +41,39 @@
 
 .art {
 	background: #0f0;
+}
+
+.moveBtn {
+	background: #ccc;
+	color: black;
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	border: none;
+}
+
+.moveBtn.left {
+	top: 50%;
+	left: 0;
+	margin-top: -20px;
+}
+
+.moveBtn.right {
+	top: 50%;
+	right: 0;
+	margin-top: -20px;
+}
+
+.moveBtn.up {
+	top: 0;
+	left: 50%;
+	margin-left: -20px;
+}
+
+.moveBtn.down {
+	bottom: 0;
+	left: 50%;
+	margin-left: -20px;
 }

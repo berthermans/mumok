@@ -2,21 +2,28 @@
 <html>
 <head>
 	<title>Mumok</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
 
-<h2> Please enter your name</h2>
-<input id="playerNameInput" type="text" />
-<button id="playerNameSubmit">Start</button>
+<div class="hidden">
+	<h2> Please enter your name</h2>
+	<input id="playerNameInput" type="text" />
+	<button id="playerNameSubmit">Start</button>
 
-<h2>Players</h2>
-<div id="playerList"></div>
+	<h2>Players</h2>
+	<div id="playerList"></div>
+</div>
 
-<h2>Pieces</h2>
-<div id="pieces"></div>
+<div id="pieces">
+	<div id="avatar" class="piece avatar"></div>
 
+	<button class="moveBtn left" data-direction="left"> < </button>
+	<button class="moveBtn right" data-direction="right"> > </button>
+	<button class="moveBtn up" data-direction="up"> /\ </button>
+	<button class="moveBtn down" data-direction="down"> \/ </button>
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/vendor/jquery-3.1.1.min.js"></script>

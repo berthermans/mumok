@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour {
         oldRotation         = transform.rotation;
         currentRotation     = oldRotation;
 
+        socket.On("avatarMove", PlayerMove);
+
         StartCoroutine(ConnectToServer());
     }
 
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour {
 
         string positionData = JsonUtility.ToJson(new PositionJSON(transform.position));
         socket.Emit("avatarInit", new JSONObject(positionData));
+        Debug.Log("avatarInit");
     }
 
 	// Update is called once per frame
@@ -57,6 +60,35 @@ public class PlayerController : MonoBehaviour {
         
 	}
 
+    void PlayerMove (SocketIOEvent socketIOEvent)
+    {
+        string data = socketIOEvent.data.ToString();
+        
+        if(data == "{\"direction\":\"left\"}")
+        {
+            Debug.Log("LEFT");
+            transform.Translate(2, 0, 0);
+        }
+
+        if (data == "{\"direction\":\"right\"}")
+        {
+            Debug.Log("RIGHT");
+            transform.Translate(-2, 0, 0);
+        }
+
+        if (data == "{\"direction\":\"up\"}")
+        {
+            Debug.Log("UP");
+            transform.Translate(0, 0, -2);
+        }
+
+        if (data == "{\"direction\":\"down\"}")
+        {
+            Debug.Log("DOWN");
+            transform.Translate(0, 0, 2);
+        }
+    }
+
     public class PositionJSON
     {
         public float[] position;
@@ -64,6 +96,16 @@ public class PlayerController : MonoBehaviour {
         public PositionJSON(Vector3 _position)
         {
             position = new float[] { _position.x, _position.z };
+        }
+    }
+
+    public class avatarJSON
+    {
+        public float[] direction;
+
+        public static avatarJSON CreateFromJSON(string data)
+        {
+            return JsonUtility.FromJson<avatarJSON>(data);
         }
     }
 }
