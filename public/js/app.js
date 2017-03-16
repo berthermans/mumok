@@ -54,6 +54,8 @@ socket.on('avatar', function(data){
 
 socket.on('art', function(data){
 
+	console.log(data);
+
 	Object.keys(data).forEach(function(key, index){
 
 		var artX = data[key].coordinates.position[0] * scaler;
